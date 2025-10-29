@@ -20,10 +20,10 @@ public class AuthServiceImpl implements AuthService {
             return "Error: Email already registered!";
         }
 
-        // Create new user and save to DB
+        //new user
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // No encoding for now
+        user.setPassword(request.getPassword());
 
         userRepository.save(user);
         return "User registered successfully!";
