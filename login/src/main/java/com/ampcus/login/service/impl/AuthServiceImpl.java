@@ -20,14 +20,28 @@ public class AuthServiceImpl implements AuthService {
             return "Error: Email already registered!";
         }
 
-        //new user
+        // Check if role is provided and handle it accordingly
+        if (request.getRole() == null || request.getRole().isEmpty()) {
+            return "Error: Role is required!";
+        }
+
+        User.Role role;
+        try {
+            role = User.Role.valueOf(request.getRole().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return "Error: Invalid role! Valid roles are USER and ADMIN.";
+        }
+
+        // Create new user
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+        user.setRole(role);
 
         userRepository.save(user);
         return "User registered successfully!";
     }
+
 
     @Override
     public String loginUser(LoginRequest request) {
@@ -41,6 +55,6 @@ public class AuthServiceImpl implements AuthService {
             return "Error: Invalid password!";
         }
 
-        return "Login successful!";
+        return "Login successful! Role:"+user.getRole();
     }
 }

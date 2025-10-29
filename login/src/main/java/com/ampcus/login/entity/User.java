@@ -19,7 +19,14 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    private boolean enabled = true;
 
-    private boolean enabled = false;
+    @Enumerated (EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+    public enum Role{
+        USER,
+        ADMIN
+    }
 
 }
