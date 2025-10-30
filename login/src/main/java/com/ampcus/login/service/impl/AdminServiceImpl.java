@@ -3,7 +3,11 @@ package com.ampcus.login.service.impl;
 import com.ampcus.login.entity.User;
 import com.ampcus.login.repository.UserRepository;
 import com.ampcus.login.service.AdminService;
+import com.ampcus.login.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable; // Correct import here
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +22,6 @@ public class AdminServiceImpl implements AdminService {
             if (userRepository.existsByEmail(user.getEmail())) {
                 return "Error: Email already registered!";
             }
-
-
             user.setPassword(user.getPassword());
             userRepository.save(user);
             return "User added successfully!";
@@ -37,7 +39,6 @@ public class AdminServiceImpl implements AdminService {
                 return "Error: User not found!";
             }
 
-            // Update the user's details
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
             existingUser.setRole(user.getRole());
@@ -58,7 +59,6 @@ public class AdminServiceImpl implements AdminService {
                 return "Error: User not found!";
             }
 
-
             user.setEnabled(false);
             userRepository.save(user);
             return "User deactivated (soft delete) successfully!";
@@ -76,11 +76,24 @@ public class AdminServiceImpl implements AdminService {
                 return "Error: User not found!";
             }
 
-
             userRepository.deleteById(userId);
             return "User deleted permanently!";
         } catch (Exception e) {
             return "Error: Something went wrong while deleting the user.";
         }
     }
+
+    @Override
+    public Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable) {
+        User.Role role = null;
+        if (roleStr != null && !roleStr.isEmpty()) {
+            try {
+                role = User.Role.valueOf(roleStr.toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+        Specification<User> spec = UserSpecification.build(email, role, enabled);
+        return userRepository.findAll(spec, pageable);  // Using the correct method from JpaSpecificationExecutor
+    }
+
 }

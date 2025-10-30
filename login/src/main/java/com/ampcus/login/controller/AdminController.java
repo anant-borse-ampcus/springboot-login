@@ -68,4 +68,18 @@ public class AdminController {
 
         return ResponseEntity.ok(result);
     }
+    @GetMapping("/search-users")
+    public ResponseEntity<?> searchUsers(
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) Boolean enabled,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            var usersPage = adminService.searchUsers(email, role, enabled, org.springframework.data.domain.PageRequest.of(page, size));
+            return ResponseEntity.ok(usersPage);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: Something went wrong while searching for users.");
+        }
+    }
 }
