@@ -1,5 +1,7 @@
 package com.ampcus.login.service;
 
+import com.ampcus.login.dto.UserResponseDto;
+import com.ampcus.login.dto.searchUserDto;
 import com.ampcus.login.entity.User;
 import org.springframework.data.domain.Page;  // Correct import here
 import org.springframework.data.domain.Pageable;
@@ -10,5 +12,7 @@ public interface AdminService {
     String softDeleteUser(Long userId);
     String deleteUser(Long userId);
 
-    Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable);  // Signature matches the implementation
+   // Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable);
+    Page<UserResponseDto> searchUsers(searchUserDto searchDto, Pageable pageable);
+
 }

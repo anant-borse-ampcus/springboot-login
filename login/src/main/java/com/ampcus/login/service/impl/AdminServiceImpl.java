@@ -1,5 +1,7 @@
 package com.ampcus.login.service.impl;
 
+import com.ampcus.login.dto.UserResponseDto;
+import com.ampcus.login.dto.searchUserDto;
 import com.ampcus.login.entity.User;
 import com.ampcus.login.repository.UserRepository;
 import com.ampcus.login.service.AdminService;
@@ -84,16 +86,42 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable) {
+    public Page<UserResponseDto> searchUsers(searchUserDto searchDto, Pageable pageable) {
         User.Role role = null;
-        if (roleStr != null && !roleStr.isEmpty()) {
+        if (searchDto.getRole() != null && !searchDto.getRole().isEmpty()) {
             try {
-                role = User.Role.valueOf(roleStr.toUpperCase());
-            } catch (IllegalArgumentException ignored) {
-            }
+                role = User.Role.valueOf(searchDto.getRole().toUpperCase());
+            } catch (IllegalArgumentException ignored) {}
         }
-        Specification<User> spec = UserSpecification.build(email, role, enabled);
-        return userRepository.findAll(spec, pageable);  // Using the correct method from JpaSpecificationExecutor
+
+        Specification<User> spec = UserSpecification.build(
+                searchDto.getEmail(),
+                role,
+                searchDto.getEnabled()
+        );
+
+        Page<User> usersPage = userRepository.findAll(spec, pageable);
+
+        // Map to DTOs here
+        return usersPage.map(user -> new UserResponseDto(
+                user.getEmail(),
+                user.getRole().name(),
+                user.isEnabled()
+        ));
     }
+
+
+//    @Override
+//    public Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable) {
+//        User.Role role = null;
+//        if (roleStr != null && !roleStr.isEmpty()) {
+//            try {
+//                role = User.Role.valueOf(roleStr.toUpperCase());
+//            } catch (IllegalArgumentException ignored) {
+//            }
+//        }
+//        Specification<User> spec = UserSpecification.build(email, role, enabled);
+//        return userRepository.findAll(spec, pageable);  // Using the correct method from JpaSpecificationExecutor
+//    }
 
 }
