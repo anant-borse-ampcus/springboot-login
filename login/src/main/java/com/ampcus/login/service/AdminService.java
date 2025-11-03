@@ -10,6 +10,7 @@ public interface AdminService {
     String addUser(User user);
     String updateUser(Long userId, User user);
     String softDeleteUser(Long userId);
+    String activateUser(Long userId);
     String deleteUser(Long userId);
 
    // Page<User> searchUsers(String email, String roleStr, Boolean enabled, Pageable pageable);

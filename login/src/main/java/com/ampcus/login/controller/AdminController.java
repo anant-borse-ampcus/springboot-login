@@ -44,6 +44,14 @@ public class AdminController {
         }
         return ResponseEntity.ok(result);
     }
+    @PutMapping("/activate/{userId}")
+    public ResponseEntity<String> activateUser(@PathVariable Long userId) {
+        String result = adminService.activateUser(userId);
+        if (result.startsWith("Error")) {
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
 
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {

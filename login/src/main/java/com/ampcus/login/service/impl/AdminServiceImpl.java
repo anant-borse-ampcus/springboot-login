@@ -70,6 +70,21 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public String activateUser(Long userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return "Error: User not found!";
+            }
+            user.setEnabled(true);
+            userRepository.save(user);
+            return "User activated successfully!";
+        } catch (Exception e) {
+            return "Error: Something went wrong while activating the user.";
+        }
+    }
+
+    @Override
     public String deleteUser(Long userId) {
         try {
             User user = userRepository.findById(userId).orElse(null);
@@ -104,6 +119,7 @@ public class AdminServiceImpl implements AdminService {
 
 
         return usersPage.map(user -> new UserResponseDto(
+                user.getId(),
                 user.getEmail(),
                 user.getRole().toString(),
                 user.isEnabled()

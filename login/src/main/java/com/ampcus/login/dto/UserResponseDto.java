@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDto {
+    private Long id;
     private String email;
     private String role;
     private Boolean enabled;
+
+
+
 }
