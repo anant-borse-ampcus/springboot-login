@@ -1,6 +1,8 @@
 package com.ampcus.login.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class UserResponse {
@@ -8,4 +10,8 @@ public class UserResponse {
     private String email;
     private String password;
     private String role;
+
+
+
+
 }

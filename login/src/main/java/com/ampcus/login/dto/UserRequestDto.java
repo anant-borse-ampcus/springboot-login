@@ -1,13 +1,14 @@
 package com.ampcus.login.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class searchUserDto {
+public class UserRequestDto {
+
     private String email;
     private String role;
     private Boolean enabled;

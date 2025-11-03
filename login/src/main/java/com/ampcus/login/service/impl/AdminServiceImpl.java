@@ -1,7 +1,7 @@
 package com.ampcus.login.service.impl;
 
 import com.ampcus.login.dto.UserResponseDto;
-import com.ampcus.login.dto.searchUserDto;
+import com.ampcus.login.dto.SearchUserDto;
 import com.ampcus.login.entity.User;
 import com.ampcus.login.repository.UserRepository;
 import com.ampcus.login.service.AdminService;
@@ -86,7 +86,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<UserResponseDto> searchUsers(searchUserDto searchDto, Pageable pageable) {
+    public Page<UserResponseDto> searchUsers(SearchUserDto searchDto, Pageable pageable) {
         User.Role role = null;
         if (searchDto.getRole() != null && !searchDto.getRole().isEmpty()) {
             try {
@@ -102,10 +102,10 @@ public class AdminServiceImpl implements AdminService {
 
         Page<User> usersPage = userRepository.findAll(spec, pageable);
 
-        // Map to DTOs here
+
         return usersPage.map(user -> new UserResponseDto(
                 user.getEmail(),
-                user.getRole().name(),
+                user.getRole().toString(),
                 user.isEnabled()
         ));
     }

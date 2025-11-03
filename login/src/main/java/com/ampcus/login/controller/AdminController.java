@@ -1,7 +1,8 @@
 package com.ampcus.login.controller;
 
+import com.ampcus.login.dto.UserRequestDto;
 import com.ampcus.login.dto.UserResponseDto;
-import com.ampcus.login.dto.searchUserDto;
+import com.ampcus.login.dto.SearchUserDto;
 import com.ampcus.login.entity.User;
 import com.ampcus.login.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +56,11 @@ public class AdminController {
 
     @GetMapping("/search-users")
     public ResponseEntity<Page<UserResponseDto>> searchUsers(
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String role,
-            @RequestParam(required = false) Boolean enabled,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @ModelAttribute  SearchUserDto searchDto){
 
         try {
-            searchUserDto searchDto = new searchUserDto();
-            searchDto.setEmail(email);
-            searchDto.setRole(role);
-            searchDto.setEnabled(enabled);
-
-            Page<UserResponseDto> usersPage = adminService.searchUsers(searchDto, PageRequest.of(page, size));
+            PageRequest pageRequest = PageRequest.of(searchDto.getPage(), searchDto.getSize());
+            Page<UserResponseDto> usersPage = adminService.searchUsers(searchDto, pageRequest);
             return ResponseEntity.ok(usersPage);
 
         } catch (Exception e) {
