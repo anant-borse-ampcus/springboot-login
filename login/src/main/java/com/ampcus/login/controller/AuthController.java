@@ -1,9 +1,10 @@
-package com.ampcus.login.controller;
+        package com.ampcus.login.controller;
 
 import com.ampcus.login.dto.LoginRequest;
 import com.ampcus.login.dto.SignupRequest;
 import com.ampcus.login.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         String result = authService.loginUser(request);
-        if (result.equals("Login successful!")) {
+        if (result != null && result.startsWith("Login successful")) {
             return ResponseEntity.ok(result);
         }
-        return ResponseEntity.status(401).body(result);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
     }
 }
